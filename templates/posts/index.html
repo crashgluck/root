@@ -1,0 +1,103 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+  <div class="row">
+    <div class="col-12 col-md-6 mx-auto">
+      {% for d in data %}
+      <div class="card mb-5 post" style="width: 18rem;">
+        <div class="card-header">
+          <p class="card-text">{{ d.titulo }}</p>
+        </div>
+        <img src="{{ d.imagen.url }}" class="card-img-top" alt="Imagen del post">
+        <div class="card-body">
+          <p class="card-text">{{ d.contenido }}</p>
+
+          <div class="mb-2">
+            <a href="{% url 'comentar_post' d.id %}" class="btn btn-outline-primary btn-sm">Ver y comentar</a>
+          </div>
+
+          <!-- Formulario para manejar favoritos -->
+          <form action="{% url 'toggle_favorito' d.id %}" method="post" class="mb-2">
+            {% csrf_token %}
+            {% if user.is_authenticated %}
+              {% if d.id in liked_posts %}
+                <button class="btn btn-warning btn-sm" type="submit">
+                  ★ Quitar de favoritos ({{ d.total_favoritos }})
+                </button>
+              {% else %}
+                <button class="btn btn-outline-warning btn-sm" type="submit">
+                  ☆ Agregar a favoritos ({{ d.total_favoritos }})
+                </button>
+              {% endif %}
+            {% else %}
+              <a href="{% url 'login' %}" class="btn btn-outline-secondary btn-sm">Inicia sesión para agregar a favoritos</a>
+            {% endif %}
+          </form>
+
+          <!-- Formulario para manejar likes -->
+          <form action="{% url 'like_post' d.id %}" method="post" class="mb-2">
+            {% csrf_token %}
+            {% if user.is_authenticated %}
+              {% if d.id in liked_posts %}
+                <button class="btn btn-danger btn-sm" type="submit">
+                  ❤️ Quitar Like ({{ d.total_likes }})
+                </button>
+              {% else %}
+                <button class="btn btn-outline-danger btn-sm" type="submit">
+                  🤍 Dar Like ({{ d.total_likes }})
+                </button>
+              {% endif %}
+            {% else %}
+              <a href="{% url 'login' %}" class="btn btn-outline-secondary btn-sm">Inicia sesión para dar like</a>
+            {% endif %}
+          </form>
+
+          <!-- Estado de aprobación -->
+          <p>Aprobado: <span class="estado">{{ d.aprobado|yesno:"Sí,No" }}</span></p>
+          <button class="toggle-aprobado btn btn-sm btn-outline-success" data-id="{{ d.id }}">
+            {% if d.aprobado %}Desaprobar{% else %}Aprobar{% endif %}
+          </button>
+
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_script %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $('.toggle-aprobado').on('click', function () {
+      const button = $(this);
+      const postId = button.data('id');
+
+      $.ajax({
+        url: "{% url 'toggle_aprobado' %}",
+        type: "POST",
+        data: {
+          post_id: postId,
+          csrfmiddlewaretoken: '{{ csrf_token }}'
+        },
+        success: function (response) {
+          if (response.success) {
+            const estado = response.aprobado ? "Sí" : "No";
+            button.closest('.post').find('.estado').text(estado);
+            button.text(response.aprobado ? "Desaprobar" : "Aprobar");
+          } else {
+            alert(response.error || "Algo salió mal.");
+          }
+        },
+        error: function () {
+          alert("Error en la solicitud.");
+        }
+      });
+    });
+  });
+</script>
+{% endblock %}
