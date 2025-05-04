@@ -6,7 +6,7 @@ class Post(models.Model):
     titulo = models.CharField(max_length=255)
     contenido = models.TextField()
     creado = models.DateTimeField(auto_now_add=True)
-    imagen = models.ImageField(upload_to='posts/imagenes_subidas/', blank=True, null=True)  # <-- aquí
+    imagen = models.ImageField(upload_to='posts/imagenes_subidas/', blank=False, null=False)  # <-- aquí
     aprobado = models.BooleanField(default=False)  # <-- nuevo campo
 
     def __str__(self):

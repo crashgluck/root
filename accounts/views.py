@@ -1,11 +1,17 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout, authenticate
+# accounts/views.py
+
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.shortcuts import render, redirect, get_object_or_404
 
 from .models import Profile
 #from .models import Profile
-from .forms import CustomRegistrationForm
-from django.contrib.auth.models import User
+from .forms import CustomRegistrationForm, CrearGrupoForm, AsignarUsuarioAGrupoForm
+from django.contrib.auth.models import User, Group
+
+
 
 # Create your views here.
 def login_user(request):
@@ -74,3 +80,60 @@ def register(request):
 
     return render(request, 'accounts/register.html', {'form': form})
 
+
+
+def es_superuser(user):
+    return user.is_superuser
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
+def lista_usuarios(request):
+    usuarios = User.objects.all().select_related()
+    grupos = Group.objects.all()
+    asignar_form = AsignarUsuarioAGrupoForm()
+    crear_grupo_form = CrearGrupoForm()
+
+    if request.method == 'POST':
+        if 'asignar_usuario' in request.POST:
+            asignar_form = AsignarUsuarioAGrupoForm(request.POST)
+            if asignar_form.is_valid():
+                usuario = asignar_form.cleaned_data['usuario']
+                grupo = asignar_form.cleaned_data['grupo']
+                grupo.user_set.add(usuario)
+                return redirect('lista_usuarios')
+
+        elif 'crear_grupo' in request.POST:
+            crear_grupo_form = CrearGrupoForm(request.POST)
+            if crear_grupo_form.is_valid():
+                crear_grupo_form.save()
+                return redirect('lista_usuarios')
+
+    return render(request, 'accounts/lista_usuarios.html', {
+        'usuarios': usuarios,
+        'grupos': grupos,
+        'asignar_form': asignar_form,
+        'crear_grupo_form': crear_grupo_form
+    })
+
+@login_required
+@user_passes_test(es_superuser)
+def activar_usuario(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    user.is_active = True
+    user.save() 
+    return redirect('lista_usuarios')
+
+@login_required
+@user_passes_test(es_superuser)
+def desactivar_usuario(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    user.is_active = False
+    user.save()
+    return redirect('lista_usuarios')
+
+@login_required
+@user_passes_test(es_superuser)
+def eliminar_usuario(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    user.delete()
+    return redirect('lista_usuarios')

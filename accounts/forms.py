@@ -1,7 +1,10 @@
 
 from django import forms
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from .models import Profile
+
+
+
 
 class CustomRegistrationForm(forms.ModelForm):
     password1 = forms.CharField(max_length=128, widget=forms.PasswordInput, label='Contraseña')
@@ -34,3 +37,14 @@ class CustomRegistrationForm(forms.ModelForm):
             photo = self.cleaned_data.get('photo')
             Profile.objects.create(user=user, photo=photo)
         return user
+    
+
+
+class AsignarUsuarioAGrupoForm(forms.Form):
+    usuario = forms.ModelChoiceField(queryset=User.objects.all())
+    grupo = forms.ModelChoiceField(queryset=Group.objects.all())
+
+class CrearGrupoForm(forms.ModelForm):
+    class Meta:
+        model = Group
+        fields = ['name']
