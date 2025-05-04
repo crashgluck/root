@@ -68,7 +68,7 @@ def register(request):
             login(request, user)
 
             # Redirigir a una página de éxito o a la página de inicio de sesión
-            return redirect('login')
+            return redirect('login_user')
     else:
         form = CustomRegistrationForm()
 

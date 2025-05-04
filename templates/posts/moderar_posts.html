@@ -1,0 +1,47 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h1>Posts pendientes de aprobación</h1>
+                </div>
+                <div class="card-body">
+                            
+                    {% if posts_pendientes %}
+                        <ul>
+                            {% for post in posts_pendientes %}
+                            <li style="margin-bottom: 2rem;">
+                                <h2>{{ post.titulo }}</h2>
+                                <p>{{ post.contenido|truncatewords:30 }}</p>
+                                <p>Autor: {{ post.autor.username }}</p>
+                                <p>Fecha: {{ post.creado }}</p>
+                                <div class="">
+                                    <img class="img-fluid" src="{{ post.imagen.url }}" alt="">
+                                </div>
+                                <form method="post" style="display: inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="post_id" value="{{ post.id }}">
+                                <input type="hidden" name="accion" value="aprobar">
+                                <button type="submit">✅ Aprobar</button>
+                                </form>
+                                <form method="post" style="display: inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="post_id" value="{{ post.id }}">
+                                <input type="hidden" name="accion" value="rechazar">
+                                <button type="submit" onclick="return confirm('¿Seguro que deseas rechazar este post?')">❌ Rechazar</button>
+                                </form>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        <p>No hay posts pendientes.</p>
+                        {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>            
+{% endblock %}

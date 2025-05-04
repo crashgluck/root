@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import user_passes_test
+from django.core.paginator import Paginator
 
 
 @login_required
@@ -14,7 +15,7 @@ def crear_post(request):
         return redirect('login_user')  # o al login que uses
 
     if request.method == 'POST':
-        form = PostForm(request.POST)
+        form = PostForm(request.POST, request.FILES)  # <- ¡AQUÍ!
         if form.is_valid():
             post = form.save(commit=False)
             post.autor = request.user
@@ -26,25 +27,30 @@ def crear_post(request):
     return render(request, 'posts/crear_post.html', {'form': form})
 
 
+
 @login_required
 def post(request):
     liked_posts = []
 
     if request.user.groups.filter(name='usuario').exists():
-        data = Post.objects.filter(aprobado=True)
+        posts = Post.objects.filter(aprobado=True)
     elif request.user.groups.filter(name='administrador').exists():
-        data = Post.objects.all()
+        posts = Post.objects.all()
     else:
-        data = Post.objects.none()  # por si el usuario no tiene grupo válido
+        posts = Post.objects.none()
+
+    # Paginador
+    paginator = Paginator(posts, 3)  # 10 posts por página
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
     if request.user.is_authenticated:
-        liked_posts = Post.objects.filter(favoritos__usuario=request.user)
+        liked_posts = Post.objects.filter(favoritos__usuario=request.user).values_list('id', flat=True)
 
     return render(request, 'posts/index.html', {
-        'data': data,
+        'page_obj': page_obj,
         'liked_posts': liked_posts
     })
-
 
 def comentar_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
@@ -109,6 +115,31 @@ def toggle_aprobado(request):
 
 
 def favoritos(request):
-    data = Post.objects.filter(aprobado=True)
+    user = request.user
+    favoritos = Favorito.objects.filter(usuario=user).select_related('post')  # Trae los posts favoritos
+    posts = [f.post for f in favoritos]  # Extrae los posts de cada relación
 
-    return render(request, 'posts/favoritos.html', {'data':data})
+    return render(request, 'posts/favoritos.html', {'data': posts})
+
+
+
+
+# Solo permite acceso a usuarios staff o superusuarios
+@user_passes_test(lambda u: u.is_staff)
+def moderar_posts(request):
+    posts_pendientes = Post.objects.filter(aprobado=False)
+
+    if request.method == 'POST':
+        post_id = request.POST.get('post_id')
+        accion = request.POST.get('accion')
+        post = get_object_or_404(Post, id=post_id)
+
+        if accion == 'aprobar':
+            post.aprobado = True
+            post.save()
+        elif accion == 'rechazar':
+            post.delete()
+
+        return redirect('moderar_posts')
+
+    return render(request, 'posts/moderar_posts.html', {'posts_pendientes': posts_pendientes})

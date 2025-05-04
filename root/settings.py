@@ -5,7 +5,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
@@ -61,18 +60,30 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'root.wsgi.application'
 
+oracledb.init_oracle_client(lib_dir="C:/oracle/instantclient_23_7")
+os.environ['TNS_ADMIN'] = os.path.join(BASE_DIR, 'oracle_wallet') 
 
+
+
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.oracle',
+#        'NAME': '(description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.sa-valparaiso-1.oraclecloud.com))(connect_data=#(service_name=g25ca826d422179_dgz8yijywfsu08lb_low.adb.oraclecloud.com))(security=(ssl_server_cert_dn="CN=adb.sa-valparaiso-1.oraclecloud.com, O=Oracle Corporation, L=Redwood #City, ST=California, C=US")))',  # Alias desde tnsnames.ora
+#        'USER': 'ADMIN',  # Deja vacío si usas autenticación con wallet
+#        'PASSWORD': 'Xd21proclus#',  # Igual, si es con wallet
+#        'OPTIONS':{                                                                     
+#            'wallet_location': os.path.join(BASE_DIR, 'oracle_wallet')
+#        }
+#        
+#    }
+#}
+
+# settings.py
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.oracle',
-        'NAME': '(description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.sa-santiago-1.oraclecloud.com))(connect_data=(service_name=g270ee67bb6e372_qthg18494dcwd0bb_high.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))',  # Alias desde tnsnames.ora
-        'USER': 'joaguerreroe',  # Deja vacío si usas autenticación con wallet
-        'PASSWORD': 'Oracle12345@',  # Igual, si es con wallet
-        'OPTIONS':{                                                                     
-            'wallet_location': os.path.join(BASE_DIR, 'oracle_wallet')
-        }
-        
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -98,7 +109,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es-us'
 
 TIME_ZONE = 'UTC'
 

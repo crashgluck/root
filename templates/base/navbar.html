@@ -1,52 +1,59 @@
 {% load static %}
-<!-- NAVBAR -->
-<div class="mb-3 bg-dark">
-    <nav class="navbar navbar-expand-lg text-light">
-        <div class="container-fluid">
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+{% load grupo_tags %}
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-3">
+    <div class="container-fluid">
+        <!-- Logo -->
+        <a class="navbar-brand" href="#">
+            <img src="https://th.bing.com/th/id/OIP.XyoVD9Ca9iVDV4KWg02FnAHaHa?rs=1&pid=ImgDetMain" alt="Logo" style="height: 40px;">
+        </a>
+
+        <!-- Botón hamburguesa -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+            aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
-          </button>
-          <a class="navbar-brand" href="#">
-            <div style="max-width: 3rem;">
-                <img class="img-fluid" src="./static/images/logo/Shell_logo.svg.png" alt="">
-            </div>
-          </a>
-          <div class="collapse navbar-collapse " id="navbarTogglerDemo03">
+        </button>
+
+        <!-- Contenido colapsable -->
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <!-- Enlaces -->
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link text-light" aria-current="page" href="{% url 'post' %}">Inicio</a>
-              </li>
-          
-              <li class="nav-item">
-                <a class="nav-link text-light" aria-current="page" href="{% url 'crear_post' %}">Crear Post</a>
-              </li>
-              
-             
-              <li>
-                <div class="dropdown nav-dropdown">
-                    <button class="btn dropdown-toggle text-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Categorias
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="./templates/categorias/accesorios.html">Accesorios</a></li>
-                        <li><a class="dropdown-item" href="./templates/categorias/baterias.html">Baterías</a></li>
-                        <li><a class="dropdown-item" href="./templates/categorias/electricidad-iluminacion.html">Iluminación y electricidad</a></li>
-                        <li><a class="dropdown-item" href="./templates/categorias/lubricantes.html">Lubricantes</a></li>
-                        <li><a class="dropdown-item" href="./templates/categorias/neumaticos.html">Neumaticos</a></li>
-                        <li><a class="dropdown-item" href="./templates/categorias/herramientas.html">Herramientas</a></li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'post' %}">Inicio</a>
+                </li>
+                {% if user.is_authenticated and user|en_grupo:"administrador" %}
+                <a class="nav-link" href="{% url 'moderar_posts' %}">Moderar</a>
+               
+                
+                {% endif %}
+
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'crear_post' %}">Crear Post</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="categoriasDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Categorías
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="categoriasDropdown">
+                        <li><a class="dropdown-item" href="{% url 'favoritos' %}">Mis Favoritos</a></li>
+                       
                     </ul>
-                </div>
-              </li>
-              
+                </li>
             </ul>
-            
+
+            <!-- Botón de login/logout -->
+            <div class="d-flex">
+                {% if user.is_authenticated %}
+                    <a class="btn btn-outline-danger" href="{% url 'logout' %}">
+                        <i class="bi bi-box-arrow-right"></i> Cerrar sesión
+                    </a>
+                {% else %}
+                    <a class="btn btn-outline-success" href="{% url 'login_user' %}">
+                        <i class="bi bi-person-fill"></i> Iniciar sesión
+                    </a>
+                {% endif %}
             </div>
-            </div>
-            <form class="d-flex" role="search">
-              
-              <a class="btn btn-success text-light btn-outline-success" href="./templates/cuentas/login.html"><i class="bi bi-person-fill"></i></a>
-            </form>
-          </div>
         </div>
-      </nav>
-</div>
+    </div>
+</nav>

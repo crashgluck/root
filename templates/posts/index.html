@@ -3,20 +3,16 @@
 {% block content %}
 
 <div class="container">
-  <div class="row">
-    <div class="col-12 col-md-6 mx-auto">
-      {% for d in data %}
-      <div class="card mb-5 post" style="width: 18rem;">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-6">
+      {% for d in page_obj  %}
+      <div class="card mb-5 post mx-auto" style="width: 18rem;">
         <div class="card-header">
-          <p class="card-text">{{ d.titulo }}</p>
+          <h3 class="card-text">{{ d.titulo }}</h3>
         </div>
         <img src="{{ d.imagen.url }}" class="card-img-top" alt="Imagen del post">
         <div class="card-body">
           <p class="card-text">{{ d.contenido }}</p>
-
-          <div class="mb-2">
-            <a href="{% url 'comentar_post' d.id %}" class="btn btn-outline-primary btn-sm">Ver y comentar</a>
-          </div>
 
           <!-- Formulario para manejar favoritos -->
           <form action="{% url 'toggle_favorito' d.id %}" method="post" class="mb-2">
@@ -36,6 +32,7 @@
             {% endif %}
           </form>
 
+          
           <!-- Formulario para manejar likes -->
           <form action="{% url 'like_post' d.id %}" method="post" class="mb-2">
             {% csrf_token %}
@@ -54,15 +51,50 @@
             {% endif %}
           </form>
 
-          <!-- Estado de aprobación -->
-          <p>Aprobado: <span class="estado">{{ d.aprobado|yesno:"Sí,No" }}</span></p>
-          <button class="toggle-aprobado btn btn-sm btn-outline-success" data-id="{{ d.id }}">
-            {% if d.aprobado %}Desaprobar{% else %}Aprobar{% endif %}
-          </button>
+          <div class="mb-2">
+            <a href="{% url 'comentar_post' d.id %}" class="btn btn-outline-primary btn-sm"><i class="bi bi-chat-dots"> Ver y comentar</i></a>
+          </div>
+
+          
+
+          
+          
+
+          
 
         </div>
       </div>
       {% endfor %}
+      <!-- Paginación -->
+<div class="d-flex justify-content-center mt-4">
+  <nav>
+    <ul class="pagination">
+      {% if page_obj.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+        </li>
+      {% else %}
+        <li class="page-item disabled"><span class="page-link">Anterior</span></li>
+      {% endif %}
+
+      {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+          <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+          <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+        {% endif %}
+      {% endfor %}
+
+      {% if page_obj.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+        </li>
+      {% else %}
+        <li class="page-item disabled"><span class="page-link">Siguiente</span></li>
+      {% endif %}
+    </ul>
+  </nav>
+</div>
     </div>
   </div>
 </div>

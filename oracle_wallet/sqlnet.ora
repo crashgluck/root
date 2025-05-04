@@ -1,2 +1,4 @@
-WALLET_LOCATION = (SOURCE = (METHOD = file) (METHOD_DATA = (DIRECTORY="?/network/admin")))
+WALLET_LOCATION = (SOURCE = (METHOD = file) (METHOD_DATA = (DIRECTORY=C:\\Users\\crisv\\OneDrive\\Documentos\\proyectos_programacion\\sumativa_2\\root\\oracle_wallet)))
 SSL_SERVER_DN_MATCH=yes
+SSL_CLIENT_AUTHENTICATION = FALSE
+SQLNET.WALLET_OVERRIDE = TRUE
