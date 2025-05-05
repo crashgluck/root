@@ -28,7 +28,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'landing',
     'accounts',
-    'posts',
+    'posts', 
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -60,9 +61,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'root.wsgi.application'
 
-oracledb.init_oracle_client(lib_dir="C:/oracle/instantclient_23_7")
-os.environ['TNS_ADMIN'] = os.path.join(BASE_DIR, 'oracle_wallet') 
-
+#oracledb.init_oracle_client(lib_dir="C:/oracle/instantclient_23_7")
+#os.environ['TNS_ADMIN'] = os.path.join(BASE_DIR, 'oracle_wallet') 
 
 
 #DATABASES = {

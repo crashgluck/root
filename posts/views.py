@@ -8,6 +8,10 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import user_passes_test
 from django.core.paginator import Paginator
 
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from .models import Post
+from .serializers import PostSerializer
 
 @login_required
 def crear_post(request):
@@ -143,3 +147,9 @@ def moderar_posts(request):
         return redirect('moderar_posts')
 
     return render(request, 'posts/moderar_posts.html', {'posts_pendientes': posts_pendientes})
+
+class PostListAPIView(APIView):
+    def get(self, request):
+        posts = Post.objects.all()
+        serializer = PostSerializer(posts, many=True)
+        return Response(serializer.data)
