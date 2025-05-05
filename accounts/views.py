@@ -11,6 +11,16 @@ from .models import Profile
 from .forms import CustomRegistrationForm, CrearGrupoForm, AsignarUsuarioAGrupoForm
 from django.contrib.auth.models import User, Group
 
+from rest_framework import viewsets
+
+
+from django.contrib.auth.models import User
+from .serializers import UserSerializer
+
+# accounts/views.py
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .serializers import UserSerializer
 
 
 # Create your views here.
@@ -137,3 +147,10 @@ def eliminar_usuario(request, user_id):
     user = get_object_or_404(User, id=user_id)
     user.delete()
     return redirect('lista_usuarios')
+
+
+class UserListAPIView(APIView):
+    def get(self, request):
+        users = User.objects.all()
+        serializer = UserSerializer(users, many=True)
+        return Response(serializer.data)

@@ -10,5 +10,6 @@ urlpatterns = [
     path('post/<int:post_id>/favorito/', views.toggle_favorito, name='toggle_favorito'),
     path('toggle_aprobado/', views.toggle_aprobado, name='toggle_aprobado'),
     path('moderar/', views.moderar_posts, name='moderar_posts'),
+    path('api/posts/', views.PostListAPIView.as_view(), name='api-posts'),
 
 ]
