@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 from .models import Profile
 #from .models import Profile
-from .forms import CustomRegistrationForm, CrearGrupoForm, AsignarUsuarioAGrupoForm
+from .forms import CustomRegistrationForm, CrearGrupoForm, AsignarUsuarioAGrupoForm, ProfileForm
 from django.contrib.auth.models import User, Group
 
 from rest_framework import viewsets
@@ -154,3 +154,21 @@ class UserListAPIView(APIView):
         users = User.objects.all()
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data)
+    
+
+@login_required
+def edit_profile(request):
+    try:
+        profile = request.user.profile
+    except Profile.DoesNotExist:
+        profile = Profile(user=request.user)
+
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('profile_view')  # o a donde quieras redirigir
+    else:
+        form = ProfileForm(instance=profile)
+
+    return render(request, 'accounts/edit_profile.html', {'form': form})

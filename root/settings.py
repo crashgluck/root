@@ -14,7 +14,9 @@ SECRET_KEY = 'django-insecure-f&2222q&5x@44wsbsr)pnyv%*fn4bao65_oa3-gnkao%_23d^&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
+
+APPEND_SLASH = True
 
 
 # Application definition
@@ -61,31 +63,31 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'root.wsgi.application'
 
-#oracledb.init_oracle_client(lib_dir="C:/oracle/instantclient_23_7")
-#os.environ['TNS_ADMIN'] = os.path.join(BASE_DIR, 'oracle_wallet') 
+oracledb.init_oracle_client(
+    lib_dir=r"C:\oracle\instantclient_23_7"
+)
+
+DATABASES={
+    'default':
+    {
+    'ENGINE':'django.db.backends.oracle',
+    'NAME':'qv8ma3n0xoshcc8t_high',
+    'USER':'admin', 
+    'PASSWORD':'Oraclegod123',#Please provide the db password here
+    'OPTIONS':{
+        'wallet_location':r"C:\oracle\instantclient_23_7\network\admin"
+    }
+    }
+}
+# settings.py
 
 
 #DATABASES = {
 #    'default': {
-#        'ENGINE': 'django.db.backends.oracle',
-#        'NAME': '(description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.sa-valparaiso-1.oraclecloud.com))(connect_data=#(service_name=g25ca826d422179_dgz8yijywfsu08lb_low.adb.oraclecloud.com))(security=(ssl_server_cert_dn="CN=adb.sa-valparaiso-1.oraclecloud.com, O=Oracle Corporation, L=Redwood #City, ST=California, C=US")))',  # Alias desde tnsnames.ora
-#        'USER': 'ADMIN',  # Deja vacío si usas autenticación con wallet
-#        'PASSWORD': 'Xd21proclus#',  # Igual, si es con wallet
-#        'OPTIONS':{                                                                     
-#            'wallet_location': os.path.join(BASE_DIR, 'oracle_wallet')
-#        }
-#        
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': BASE_DIR / 'db.sqlite3',
 #    }
 #}
-
-# settings.py
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators

@@ -1,8 +1,8 @@
-dgz8yijywfsu08lb_high = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.sa-valparaiso-1.oraclecloud.com))(connect_data=(service_name=g25ca826d422179_dgz8yijywfsu08lb_high.adb.oraclecloud.com))(security=(ssl_server_cert_dn="CN=adb.sa-valparaiso-1.oraclecloud.com, O=Oracle Corporation, L=Redwood City, ST=California, C=US")))
+qv8ma3n0xoshcc8t_high = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.sa-valparaiso-1.oraclecloud.com))(connect_data=(service_name=g25ca826d422179_qv8ma3n0xoshcc8t_high.adb.oraclecloud.com))(security=(ssl_server_cert_dn="CN=adb.sa-valparaiso-1.oraclecloud.com, O=Oracle Corporation, L=Redwood City, ST=California, C=US")))
 
-dgz8yijywfsu08lb_low = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.sa-valparaiso-1.oraclecloud.com))(connect_data=(service_name=g25ca826d422179_dgz8yijywfsu08lb_low.adb.oraclecloud.com))(security=(ssl_server_cert_dn="CN=adb.sa-valparaiso-1.oraclecloud.com, O=Oracle Corporation, L=Redwood City, ST=California, C=US")))
+qv8ma3n0xoshcc8t_low = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.sa-valparaiso-1.oraclecloud.com))(connect_data=(service_name=g25ca826d422179_qv8ma3n0xoshcc8t_low.adb.oraclecloud.com))(security=(ssl_server_cert_dn="CN=adb.sa-valparaiso-1.oraclecloud.com, O=Oracle Corporation, L=Redwood City, ST=California, C=US")))
 
-dgz8yijywfsu08lb_medium = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.sa-valparaiso-1.oraclecloud.com))(connect_data=(service_name=g25ca826d422179_dgz8yijywfsu08lb_medium.adb.oraclecloud.com))(security=(ssl_server_cert_dn="CN=adb.sa-valparaiso-1.oraclecloud.com, O=Oracle Corporation, L=Redwood City, ST=California, C=US")))
+qv8ma3n0xoshcc8t_medium = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.sa-valparaiso-1.oraclecloud.com))(connect_data=(service_name=g25ca826d422179_qv8ma3n0xoshcc8t_medium.adb.oraclecloud.com))(security=(ssl_server_cert_dn="CN=adb.sa-valparaiso-1.oraclecloud.com, O=Oracle Corporation, L=Redwood City, ST=California, C=US")))
 
 
 
